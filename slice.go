@@ -34,7 +34,7 @@ func AsSlice[V any](value any) ([]V, error) {
 	slice := reflect.ValueOf(value)
 	size := slice.Len()
 	result := make([]V, size)
-	for i := 0; i < size; i++ {
+	for i := range size {
 		item := slice.Index(i).Interface()
 		v, err := convert(item)
 		if err != nil {

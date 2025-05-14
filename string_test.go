@@ -1,11 +1,14 @@
 package cast
 
 import (
+	"strings"
 	"testing"
 )
 
 func TestAsString(t *testing.T) {
 	v0 := 42
+	stringer := &strings.Builder{}
+	stringer.WriteString("test")
 	tests := []castTest[string]{
 		{nil, "", ""},
 		{"hello", "hello", ""},
@@ -25,6 +28,7 @@ func TestAsString(t *testing.T) {
 		{float32(42.5), "42.5", ""},
 		{float64(42), "42", ""},
 		{float64(42.5), "42.5", ""},
+		{stringer, "test", ""},
 		{[]int{1, 2, 3}, "", "failed to cast []int to string"},
 	}
 	runCastTests(t, "AsString", AsString, tests)
