@@ -80,9 +80,9 @@ func mapAsStruct(m reflect.Value, s reflect.Value) (reflect.Value, error) {
 		}
 		field := s.FieldByName(key)
 		if !field.IsValid() {
-			field = s.FieldByName(ucfirst(key))
+			field = s.FieldByName(ucFirst(key))
 			if !field.IsValid() {
-				field = s.FieldByName(lcfirst(key))
+				field = s.FieldByName(lcFirst(key))
 				if !field.IsValid() {
 					continue
 				}
@@ -114,7 +114,7 @@ func structAsStruct(from reflect.Value, to reflect.Value) (reflect.Value, error)
 		fieldName := srcStructField.Name
 		field := to.FieldByName(fieldName)
 		if !field.IsValid() {
-			field = to.FieldByName(lcfirst(fieldName))
+			field = to.FieldByName(lcFirst(fieldName))
 			if !field.IsValid() {
 				continue
 			}

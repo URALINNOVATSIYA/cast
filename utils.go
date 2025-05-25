@@ -5,8 +5,8 @@ import (
 	"unicode/utf8"
 )
 
-// ucfirst makes the first letter of string upper case.
-func ucfirst(str string) string {
+// ucFirst makes the first letter of string upper case.
+func ucFirst(str string) string {
 	char, size := utf8.DecodeRuneInString(str)
 	if char == utf8.RuneError {
 		return str
@@ -18,8 +18,8 @@ func ucfirst(str string) string {
 	return string(upper) + str[size:]
 }
 
-// lcfirst makes the first letter of string lower case.
-func lcfirst(str string) string {
+// lcFirst makes the first letter of string lower case.
+func lcFirst(str string) string {
 	char, size := utf8.DecodeRuneInString(str)
 	if char == utf8.RuneError {
 		return str

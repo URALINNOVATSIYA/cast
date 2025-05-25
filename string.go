@@ -31,9 +31,9 @@ func AsString(value any) (string, error) {
 	case uint, int8, uint8, int16, uint16, int32, uint32, int64, uint64:
 		return fmt.Sprintf("%d", v), nil
 	case float32:
-		return strconv.FormatFloat(float64(v), 'f', -1, 64), nil
+		return strconv.FormatFloat(float64(v), 'g', -1, 64), nil
 	case float64:
-		return strconv.FormatFloat(v, 'f', -1, 64), nil
+		return strconv.FormatFloat(v, 'g', -1, 64), nil
 	case fmt.Stringer:
 		return v.String(), nil
 	default:
