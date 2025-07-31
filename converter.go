@@ -3,52 +3,56 @@ package cast
 import (
 	"fmt"
 	"reflect"
+
+	"github.com/google/uuid"
 )
 
-func Converter[V any]() (func(any) (V, error), error) {
+func Converter[V any, C func(any) (V, error)]() (C, error) {
 	var v V
 	switch any(v).(type) {
 	case int:
-		return any(AsInt).(func(any) (V, error)), nil
+		return any(AsInt).(C), nil
 	case uint:
-		return any(AsUint).(func(any) (V, error)), nil
+		return any(AsUint).(C), nil
 	case int8:
-		return any(AsInt8).(func(any) (V, error)), nil
+		return any(AsInt8).(C), nil
 	case uint8:
-		return any(AsUint8).(func(any) (V, error)), nil
+		return any(AsUint8).(C), nil
 	case int16:
-		return any(AsInt16).(func(any) (V, error)), nil
+		return any(AsInt16).(C), nil
 	case uint16:
-		return any(AsUint16).(func(any) (V, error)), nil
+		return any(AsUint16).(C), nil
 	case int32:
-		return any(AsInt32).(func(any) (V, error)), nil
+		return any(AsInt32).(C), nil
 	case uint32:
-		return any(AsUint32).(func(any) (V, error)), nil
+		return any(AsUint32).(C), nil
 	case int64:
-		return any(AsInt64).(func(any) (V, error)), nil
+		return any(AsInt64).(C), nil
 	case uint64:
-		return any(AsUint64).(func(any) (V, error)), nil
+		return any(AsUint64).(C), nil
 	case float32:
-		return any(AsFloat32).(func(any) (V, error)), nil
+		return any(AsFloat32).(C), nil
 	case float64:
-		return any(AsFloat64).(func(any) (V, error)), nil
+		return any(AsFloat64).(C), nil
 	case string:
-		return any(AsString).(func(any) (V, error)), nil
+		return any(AsString).(C), nil
 	case bool:
-		return any(AsBool).(func(any) (V, error)), nil
+		return any(AsBool).(C), nil
+	case uuid.UUID:
+		return any(AsUuid).(C), nil
 	default:
 		t := reflect.TypeOf(v)
 		switch t.Kind() {
 		case reflect.Slice:
-			return any(asTypedSlice[V]).(func(any) (V, error)), nil
+			return any(asTypedSlice[V]).(C), nil
 		case reflect.Map:
-			return any(asTypedMap[V]).(func(any) (V, error)), nil
+			return any(asTypedMap[V]).(C), nil
 		case reflect.Struct:
-			return any(AsStruct[V]).(func(any) (V, error)), nil
+			return any(AsStruct[V]).(C), nil
 		case reflect.Pointer:
-			return any(asTypedPointer[V]).(func(any) (V, error)), nil
+			return any(asTypedPointer[V]).(C), nil
 		case reflect.Interface:
-			return any(AsInterface[V]).(func(any) (V, error)), nil
+			return any(AsInterface[V]).(C), nil
 		}
 	}
 	return nil, fmt.Errorf("unsupported casting to type %T", v)
