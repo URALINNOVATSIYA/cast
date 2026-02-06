@@ -3,6 +3,7 @@ package cast
 import (
 	"fmt"
 	"reflect"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -40,6 +41,8 @@ func Converter[V any, C func(any) (V, error)]() (C, error) {
 		return any(AsBool).(C), nil
 	case uuid.UUID:
 		return any(AsUuid).(C), nil
+	case time.Time:
+		return any(AsTime).(C), nil
 	default:
 		t := reflect.TypeOf(v)
 		switch t.Kind() {
