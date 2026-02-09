@@ -7,6 +7,7 @@ import (
 
 func TestAsTime(t *testing.T) {
 	tests := []castTest[time.Time]{
+		{time.Date(2020, 5, 20, 13, 15, 47, 0, time.UTC), time.Date(2020, 5, 20, 13, 15, 47, 0, time.UTC), ""},
 		{"2024-01-29 20:22:03", time.Date(2024, 1, 29, 20, 22, 3, 0, time.UTC), ""},
 		{"2024-01-29 20:22:03.123456-07", time.Date(2024, 1, 29, 20, 22, 3, 123456000, time.FixedZone("-07", -7*60*60)), ""},
 		{"2024-01-29 20:22:03.123456-07:00", time.Date(2024, 1, 29, 20, 22, 3, 123456000, time.FixedZone("-07:00", -7*60*60)), ""},

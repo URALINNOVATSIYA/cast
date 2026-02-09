@@ -40,12 +40,16 @@ func ToTime(value any) time.Time {
 }
 
 func AsTime(value any) (time.Time, error) {
+	var t time.Time
+	if t, ok := value.(time.Time); ok {
+		return t, nil
+	}
 	v, err := AsString(value)
 	if err != nil {
 		return time.Time{}, err
 	}
 	for _, layout := range TimeLayouts {
-		if t, err := time.Parse(layout, v); err == nil {
+		if t, err = time.Parse(layout, v); err == nil {
 			return t, nil
 		}
 	}
