@@ -60,4 +60,14 @@ func TestAsSlice(t *testing.T) {
 		}
 		runCastTests(t, "AsSlice[[]string]", AsSlice[[]string], tests)
 	})
+
+	t.Run("with any element type", func(t *testing.T) {
+		v0 := []int{1, 2, 3}
+		expected := []any{1, 2, 3}
+		tests := []castTest[[]any]{
+			{v0, expected, ""},
+			{&v0, expected, ""},
+		}
+		runCastTests(t, "AsSlice[any]", AsSlice[any], tests)
+	})
 }

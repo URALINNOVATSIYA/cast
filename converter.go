@@ -11,6 +11,8 @@ import (
 func Converter[V any, C func(any) (V, error)]() (C, error) {
 	var v V
 	switch any(v).(type) {
+	case nil:
+		return any(AsInterface[V]).(C), nil
 	case int:
 		return any(AsInt).(C), nil
 	case uint:
