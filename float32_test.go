@@ -6,6 +6,7 @@ import (
 
 func TestAsFloat32(t *testing.T) {
 	str := "42"
+	var nilPtr *float32
 	tests := []castTest[float32]{
 		{nil, 0, ""},
 		{uint(42), 42.0, ""},
@@ -24,6 +25,7 @@ func TestAsFloat32(t *testing.T) {
 		{false, 0.0, ""},
 		{str, 42.0, ""},
 		{&str, 42.0, ""},
+		{nilPtr, 0, ""},
 		{"invalid", 0, "strconv.ParseFloat: parsing \"invalid\": invalid syntax"},
 		{[]int{1, 2, 3}, 0, "failed to cast []int to float32"},
 	}

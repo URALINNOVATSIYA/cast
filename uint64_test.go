@@ -6,6 +6,7 @@ import (
 
 func TestAsUint64(t *testing.T) {
 	str := 42
+	var nilPtr *uint64
 	tests := []castTest[uint64]{
 		{int(42), 42, ""},
 		{uint(42), 42, ""},
@@ -23,6 +24,7 @@ func TestAsUint64(t *testing.T) {
 		{false, 0, ""},
 		{str, 42, ""},
 		{&str, 42, ""},
+		{nilPtr, 0, ""},
 		{nil, 0, ""},
 		{"invalid", 0, "strconv.ParseUint: parsing \"invalid\": invalid syntax"},
 		{[]int{1, 2, 3}, 0, "failed to cast []int to uint64"},

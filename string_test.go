@@ -10,6 +10,7 @@ import (
 
 func TestAsString(t *testing.T) {
 	v0 := 42
+	var nilPtr *string
 	uid := uuid.New()
 	stringer := &strings.Builder{}
 	stringer.WriteString("test")
@@ -20,6 +21,7 @@ func TestAsString(t *testing.T) {
 		{false, "false", ""},
 		{v0, "42", ""},
 		{&v0, "42", ""},
+		{nilPtr, "", ""},
 		{int8(42), "42", ""},
 		{uint8(42), "42", ""},
 		{int16(42), "42", ""},

@@ -15,10 +15,9 @@ func ToUint16(value any) uint16 {
 }
 
 func AsUint16(value any) (uint16, error) {
-	if value == nil {
-		return 0, nil
-	}
 	switch v := value.(type) {
+	case nil:
+		return 0, nil
 	case int:
 		return uint16(v), nil
 	case uint:
@@ -57,7 +56,11 @@ func AsUint16(value any) (uint16, error) {
 	default:
 		rv := reflect.ValueOf(v)
 		if rv.Kind() == reflect.Pointer || rv.Kind() == reflect.Interface {
-			return AsType[uint16](elemOf(rv.Elem()).Interface())
+			rv = rv.Elem()
+			if !rv.IsValid() {
+				return 0, nil
+			}
+			return AsUint16(rv.Interface())
 		}
 	}
 	return 0, fmt.Errorf("failed to cast %T to uint16", value)

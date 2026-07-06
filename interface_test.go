@@ -12,8 +12,10 @@ func (a *animal) Eat() {}
 
 func TestAsInterface(t *testing.T) {
 	t.Run("as any", func(t *testing.T) {
+		var nilPtr *any
 		tests := []castTest[any]{
 			{nil, nil, ""},
+			{nilPtr, (*any)(nil), ""},
 			{123, 123, ""},
 			{"abc", "abc", ""},
 			{true, true, ""},

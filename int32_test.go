@@ -6,6 +6,7 @@ import (
 
 func TestAsInt32(t *testing.T) {
 	str := "42"
+	var nilPtr *int32
 	tests := []castTest[int32]{
 		{int(42), 42, ""},
 		{uint(42), 42, ""},
@@ -23,6 +24,7 @@ func TestAsInt32(t *testing.T) {
 		{false, 0, ""},
 		{str, 42, ""},
 		{&str, 42, ""},
+		{nilPtr, 0, ""},
 		{nil, 0, ""},
 		{"invalid", 0, "strconv.ParseInt: parsing \"invalid\": invalid syntax"},
 		{[]int{1, 2, 3}, 0, "failed to cast []int to int32"},

@@ -7,9 +7,11 @@ import (
 func TestAsSlice(t *testing.T) {
 	t.Run("with scalar element type", func(t *testing.T) {
 		v0 := []string{"1", "2", "3"}
+		var nilPtr *[]int
 		expected := []int{1, 2, 3}
 		tests := []castTest[[]int]{
 			{nil, nil, ""},
+			{nilPtr, nil, ""},
 			{[]int{}, []int{}, ""},
 			{[]string{}, []int{}, ""},
 			{[]int{1, 2, 3}, expected, ""},

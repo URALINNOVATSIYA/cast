@@ -15,10 +15,9 @@ func ToInt(value any) int {
 }
 
 func AsInt(value any) (int, error) {
-	if value == nil {
-		return 0, nil
-	}
 	switch v := value.(type) {
+	case nil:
+		return 0, nil
 	case int:
 		return v, nil
 	case uint:
@@ -53,7 +52,11 @@ func AsInt(value any) (int, error) {
 	default:
 		rv := reflect.ValueOf(v)
 		if rv.Kind() == reflect.Pointer || rv.Kind() == reflect.Interface {
-			return AsType[int](elemOf(rv.Elem()).Interface())
+			rv = rv.Elem()
+			if !rv.IsValid() {
+				return 0, nil
+			}
+			return AsInt(rv.Interface())
 		}
 	}
 	return 0, fmt.Errorf("failed to cast %T to int", value)

@@ -15,10 +15,9 @@ func ToFloat64(value any) float64 {
 }
 
 func AsFloat64(value any) (float64, error) {
-	if value == nil {
-		return 0, nil
-	}
 	switch v := value.(type) {
+	case nil:
+		return 0, nil
 	case uint:
 		return float64(v), nil
 	case int:
@@ -53,7 +52,11 @@ func AsFloat64(value any) (float64, error) {
 	default:
 		rv := reflect.ValueOf(v)
 		if rv.Kind() == reflect.Pointer || rv.Kind() == reflect.Interface {
-			return AsType[float64](elemOf(rv.Elem()).Interface())
+			rv = rv.Elem()
+			if !rv.IsValid() {
+				return 0, nil
+			}
+			return AsFloat64(rv.Interface())
 		}
 	}
 	return 0, fmt.Errorf("failed to cast %T to float64", value)

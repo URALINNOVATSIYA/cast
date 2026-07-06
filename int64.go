@@ -15,10 +15,9 @@ func ToInt64(value any) int64 {
 }
 
 func AsInt64(value any) (int64, error) {
-	if value == nil {
-		return 0, nil
-	}
 	switch v := value.(type) {
+	case nil:
+		return 0, nil
 	case int:
 		return int64(v), nil
 	case uint:
@@ -57,7 +56,11 @@ func AsInt64(value any) (int64, error) {
 	default:
 		rv := reflect.ValueOf(v)
 		if rv.Kind() == reflect.Pointer || rv.Kind() == reflect.Interface {
-			return AsType[int64](elemOf(rv.Elem()).Interface())
+			rv = rv.Elem()
+			if !rv.IsValid() {
+				return 0, nil
+			}
+			return AsInt64(rv.Interface())
 		}
 	}
 	return 0, fmt.Errorf("failed to cast %T to int64", value)

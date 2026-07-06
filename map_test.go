@@ -7,9 +7,11 @@ import (
 func TestAsMap(t *testing.T) {
 	t.Run("with scalar types", func(t *testing.T) {
 		v0 := map[string]int{"1": 1, "2": 0, "3": 3}
+		var nilPtr *map[int]bool
 		expected := map[int]bool{1: true, 2: false, 3: true}
 		tests := []castTest[map[int]bool]{
 			{nil, nil, ""},
+			{nilPtr, nil, ""},
 			{map[string]int{}, map[int]bool{}, ""},
 			{map[int]bool{}, map[int]bool{}, ""},
 			{map[int]string{1: "true", 2: "", 3: "true"}, expected, ""},

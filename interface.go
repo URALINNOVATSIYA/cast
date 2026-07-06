@@ -21,7 +21,7 @@ func AsInterface[V any](value any) (V, error) {
 	if v, ok := value.(V); ok {
 		return v, nil
 	}
-	convert := asInterface(reflect.TypeOf(&result).Elem())
+	convert := asInterface(reflect.TypeFor[V]())
 	r, err := convert(reflect.ValueOf(value))
 	if err != nil {
 		return result, err

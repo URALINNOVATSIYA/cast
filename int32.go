@@ -15,10 +15,9 @@ func ToInt32(value any) int32 {
 }
 
 func AsInt32(value any) (int32, error) {
-	if value == nil {
-		return 0, nil
-	}
 	switch v := value.(type) {
+	case nil:
+		return 0, nil
 	case int:
 		return int32(v), nil
 	case uint:
@@ -57,7 +56,11 @@ func AsInt32(value any) (int32, error) {
 	default:
 		rv := reflect.ValueOf(v)
 		if rv.Kind() == reflect.Pointer || rv.Kind() == reflect.Interface {
-			return AsType[int32](elemOf(rv.Elem()).Interface())
+			rv = rv.Elem()
+			if !rv.IsValid() {
+				return 0, nil
+			}
+			return AsInt32(rv.Interface())
 		}
 	}
 	return 0, fmt.Errorf("failed to cast %T to int32", value)

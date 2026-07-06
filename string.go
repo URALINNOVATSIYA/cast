@@ -15,10 +15,9 @@ func ToString(value any) string {
 }
 
 func AsString(value any) (string, error) {
-	if value == nil {
-		return "", nil
-	}
 	switch v := value.(type) {
+	case nil:
+		return "", nil
 	case string:
 		return v, nil
 	case bool:
@@ -39,7 +38,11 @@ func AsString(value any) (string, error) {
 	default:
 		rv := reflect.ValueOf(v)
 		if rv.Kind() == reflect.Pointer || rv.Kind() == reflect.Interface {
-			return AsType[string](elemOf(rv.Elem()).Interface())
+			rv = rv.Elem()
+			if !rv.IsValid() {
+				return "", nil
+			}
+			return AsString(rv.Interface())
 		}
 	}
 	return "", fmt.Errorf("failed to cast %T to string", value)

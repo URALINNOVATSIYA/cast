@@ -6,6 +6,7 @@ import (
 
 func TestAsBool(t *testing.T) {
 	str := "true"
+	var nilPtr *bool
 	tests := []castTest[bool]{
 		{nil, false, ""},
 		{true, true, ""},
@@ -37,6 +38,7 @@ func TestAsBool(t *testing.T) {
 		{"true", true, ""},
 		{"false", false, ""},
 		{&str, true, ""},
+		{nilPtr, false, ""},
 		{"foo", false, "failed to cast \"foo\" to bool"},
 		{struct{}{}, false, "failed to cast struct {} to bool"},
 	}

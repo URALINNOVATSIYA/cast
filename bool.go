@@ -14,10 +14,9 @@ func ToBool(value any) bool {
 }
 
 func AsBool(value any) (bool, error) {
-	if value == nil {
-		return false, nil
-	}
 	switch v := value.(type) {
+	case nil:
+		return false, nil
 	case bool:
 		return v, nil
 	case int:
@@ -55,7 +54,11 @@ func AsBool(value any) (bool, error) {
 	default:
 		rv := reflect.ValueOf(v)
 		if rv.Kind() == reflect.Pointer || rv.Kind() == reflect.Interface {
-			return AsType[bool](elemOf(rv.Elem()).Interface())
+			rv = rv.Elem()
+			if !rv.IsValid() {
+				return false, nil
+			}
+			return AsBool(rv.Interface())
 		}
 	}
 	return false, fmt.Errorf("failed to cast %T to bool", value)

@@ -21,7 +21,11 @@ func AsMap[K comparable, V any](value any) (map[K]V, error) {
 		return v, nil
 	}
 
-	value = elemOf(reflect.ValueOf(value)).Interface()
+	rv := elemOf(reflect.ValueOf(value))
+	if !rv.IsValid() {
+		return nil, nil
+	}
+	value = rv.Interface()
 	if reflect.TypeOf(value).Kind() != reflect.Map {
 		return nil, fmt.Errorf("failed to cast %T to %T", value, map[K]V(nil))
 	}
