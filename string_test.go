@@ -37,6 +37,7 @@ func TestAsString(t *testing.T) {
 		{uid, uid.String(), ""},
 		{time.Date(2020, 11, 5, 3, 45, 13, 123456, time.UTC), "2020-11-05 03:45:13.000123456 +0000 UTC", ""},
 		{stringer, "test", ""},
+		{[]byte{69, 70, 71}, "EFG", ""},
 		{[]int{1, 2, 3}, "", "failed to cast []int to string"},
 	}
 	runCastTests(t, "AsString", AsString, tests)

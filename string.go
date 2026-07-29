@@ -35,6 +35,8 @@ func AsString(value any) (string, error) {
 		return strconv.FormatFloat(v, 'g', -1, 64), nil
 	case fmt.Stringer:
 		return v.String(), nil
+	case []byte:
+		return string(v), nil
 	default:
 		rv := reflect.ValueOf(v)
 		if rv.Kind() == reflect.Pointer || rv.Kind() == reflect.Interface {

@@ -6,7 +6,7 @@ import (
 
 func TestAsUint32(t *testing.T) {
 	str := "42"
-	var nilPtr *uint32 
+	var nilPtr *uint32
 	tests := []castTest[uint32]{
 		{int(42), 42, ""},
 		{uint(42), 42, ""},
