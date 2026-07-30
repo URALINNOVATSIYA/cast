@@ -79,7 +79,7 @@ func asStruct(structType reflect.Type) func(reflect.Value) (reflect.Value, error
 			}
 			return r, err
 		default:
-			if value.CanConvert(typeTime) {
+			if s.CanConvert(typeTime) {
 				t, err := AsTime(value.Interface())
 				if err != nil {
 					return reflect.Value{}, err
