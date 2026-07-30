@@ -20,20 +20,11 @@ func AsPointer[V any](value any) (*V, error) {
 	if v, ok := value.(*V); ok {
 		return v, nil
 	}
-	rv := reflect.ValueOf(value)
-	if rv.Kind() == reflect.Pointer {
-		value = elemOf(rv).Interface()
-	}
-	fn, err := Converter[V]()
+	convert, err := Converter[*V]()
 	if err != nil {
 		return nil, err
 	}
-	var v V
-	v, err = fn(value)
-	if err != nil {
-		return nil, err
-	}
-	return &v, nil
+	return convert(value)
 }
 
 func asPointer(pointerType reflect.Type) func(reflect.Value) (reflect.Value, error) {
@@ -59,19 +50,12 @@ func asPointer(pointerType reflect.Type) func(reflect.Value) (reflect.Value, err
 			return reflect.Value{}, err
 		}
 		if v.CanAddr() {
-			return reflect.NewAt(pointerType, unsafe.Pointer(v.UnsafeAddr())), nil
+			return reflect.NewAt(pointerType.Elem(), unsafe.Pointer(v.UnsafeAddr())), nil
 		}
 		p := reflect.New(v.Type())
 		p.Elem().Set(v)
-		return p, nil
+		return p.Convert(pointerType), nil
 	}
-}
-
-func elemOf(value reflect.Value) reflect.Value {
-	for value.Kind() == reflect.Pointer || value.Kind() == reflect.Interface {
-		value = value.Elem()
-	}
-	return value
 }
 
 func asTypedPointer[V any](value any) (V, error) {

@@ -48,16 +48,46 @@ func Converter[V any, C func(any) (V, error)]() (C, error) {
 	default:
 		t := reflect.TypeOf(v)
 		switch t.Kind() {
+		case reflect.Int:
+			return asTypedType[V](t, asInt), nil
+		case reflect.Uint:
+			return asTypedType[V](t, asUint), nil
+		case reflect.Int8:
+			return asTypedType[V](t, asInt8), nil
+		case reflect.Uint8:
+			return asTypedType[V](t, asUint8), nil
+		case reflect.Int16:
+			return asTypedType[V](t, asInt16), nil
+		case reflect.Uint16:
+			return asTypedType[V](t, asUint16), nil
+		case reflect.Int32:
+			return asTypedType[V](t, asInt32), nil
+		case reflect.Uint32:
+			return asTypedType[V](t, asUint32), nil
+		case reflect.Int64:
+			return asTypedType[V](t, asInt64), nil
+		case reflect.Uint64:
+			return asTypedType[V](t, asUint64), nil
+		case reflect.Float32:
+			return asTypedType[V](t, asFloat32), nil
+		case reflect.Float64:
+			return asTypedType[V](t, asFloat64), nil
+		case reflect.String:
+			return asTypedType[V](t, asString), nil
+		case reflect.Bool:
+			return asTypedType[V](t, asBool), nil
+		case reflect.Array:
+			return asTypedArray[V], nil
 		case reflect.Slice:
-			return any(asTypedSlice[V]).(C), nil
+			return asTypedSlice[V], nil
 		case reflect.Map:
-			return any(asTypedMap[V]).(C), nil
+			return asTypedMap[V], nil
 		case reflect.Struct:
-			return any(AsStruct[V]).(C), nil
+			return AsStruct[V], nil
 		case reflect.Pointer:
-			return any(asTypedPointer[V]).(C), nil
+			return asTypedPointer[V], nil
 		case reflect.Interface:
-			return any(AsInterface[V]).(C), nil
+			return AsInterface[V], nil
 		}
 	}
 	return nil, fmt.Errorf("unsupported casting to type %T", v)
@@ -66,33 +96,35 @@ func Converter[V any, C func(any) (V, error)]() (C, error) {
 func converter(t reflect.Type) (func(reflect.Value) (reflect.Value, error), error) {
 	switch t.Kind() {
 	case reflect.Int:
-		return asInt, nil
+		return asType(t, asInt), nil
 	case reflect.Uint:
-		return asUint, nil
+		return asType(t, asUint), nil
 	case reflect.Int8:
-		return asInt8, nil
+		return asType(t, asInt8), nil
 	case reflect.Uint8:
-		return asUint8, nil
+		return asType(t, asUint8), nil
 	case reflect.Int16:
-		return asInt16, nil
+		return asType(t, asInt16), nil
 	case reflect.Uint16:
-		return asUint16, nil
+		return asType(t, asUint16), nil
 	case reflect.Int32:
-		return asInt32, nil
+		return asType(t, asInt32), nil
 	case reflect.Uint32:
-		return asUint32, nil
+		return asType(t, asUint32), nil
 	case reflect.Int64:
-		return asInt64, nil
+		return asType(t, asInt64), nil
 	case reflect.Uint64:
-		return asUint64, nil
+		return asType(t, asUint64), nil
 	case reflect.Float32:
-		return asFloat32, nil
+		return asType(t, asFloat32), nil
 	case reflect.Float64:
-		return asFloat64, nil
+		return asType(t, asFloat64), nil
 	case reflect.String:
-		return asString, nil
+		return asType(t, asString), nil
 	case reflect.Bool:
-		return asBool, nil
+		return asType(t, asBool), nil
+	case reflect.Array:
+		return asArray(t), nil
 	case reflect.Slice:
 		return asSlice(t), nil
 	case reflect.Map:

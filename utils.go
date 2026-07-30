@@ -1,6 +1,7 @@
 package cast
 
 import (
+	"reflect"
 	"unicode"
 	"unicode/utf8"
 )
@@ -29,4 +30,11 @@ func lcFirst(str string) string {
 		return str
 	}
 	return string(lower) + str[size:]
+}
+
+func elemOf(value reflect.Value) reflect.Value {
+	for value.Kind() == reflect.Pointer || value.Kind() == reflect.Interface {
+		value = value.Elem()
+	}
+	return value
 }

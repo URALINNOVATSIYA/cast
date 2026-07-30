@@ -48,14 +48,21 @@ func AsUint32(value any) (uint32, error) {
 		}
 		return 0, nil
 	case string:
-		value, err := strconv.ParseUint(v, 10, 64)
-		if err != nil {
-			return 0, err
+		if value, err := strconv.ParseUint(v, 10, 64); err == nil {
+			return uint32(value), nil
 		}
-		return uint32(value), nil
 	default:
 		rv := reflect.ValueOf(v)
-		if rv.Kind() == reflect.Pointer || rv.Kind() == reflect.Interface {
+		switch rv.Kind() {
+		case reflect.Bool, reflect.String,
+			reflect.Int, reflect.Uint,
+			reflect.Int8, reflect.Uint8,
+			reflect.Int16, reflect.Uint16,
+			reflect.Int32, reflect.Uint32,
+			reflect.Int64, reflect.Uint64,
+			reflect.Float32, reflect.Float64:
+			return AsUint32(rv.Convert(kind2types[rv.Kind()]).Interface())
+		case reflect.Pointer, reflect.Interface:
 			rv = rv.Elem()
 			if !rv.IsValid() {
 				return 0, nil

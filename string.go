@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"reflect"
 	"strconv"
+	"time"
 )
 
 func ToString(value any) string {
@@ -39,12 +40,38 @@ func AsString(value any) (string, error) {
 		return string(v), nil
 	default:
 		rv := reflect.ValueOf(v)
-		if rv.Kind() == reflect.Pointer || rv.Kind() == reflect.Interface {
+		switch rv.Kind() {
+		case reflect.Bool, reflect.String,
+			reflect.Int, reflect.Uint,
+			reflect.Int8, reflect.Uint8,
+			reflect.Int16, reflect.Uint16,
+			reflect.Int32, reflect.Uint32,
+			reflect.Int64, reflect.Uint64,
+			reflect.Float32, reflect.Float64:
+			return AsString(rv.Convert(kind2types[rv.Kind()]).Interface())
+		case reflect.Slice:
+			if rv.Type().Elem().Kind() == reflect.Uint8 {
+				return AsString(rv.Convert(typeByteSlice).Interface())
+			}
+		case reflect.Array:
+			if rv.Type().Elem().Kind() == reflect.Uint8 {
+				if rv.CanAddr() {
+					return AsString(rv.Slice(0, rv.Len()).Interface())
+				}
+				p := reflect.New(rv.Type())
+				p.Elem().Set(rv)
+				return AsString(p.Elem().Slice(0, rv.Len()).Interface())
+			}
+		case reflect.Pointer, reflect.Interface:
 			rv = rv.Elem()
 			if !rv.IsValid() {
 				return "", nil
 			}
 			return AsString(rv.Interface())
+		case reflect.Struct:
+			if rv.CanConvert(typeTime) {
+				return rv.Convert(typeTime).Interface().(time.Time).String(), nil
+			}
 		}
 	}
 	return "", fmt.Errorf("failed to cast %T to string", value)

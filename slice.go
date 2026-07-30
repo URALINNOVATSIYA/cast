@@ -20,7 +20,6 @@ func AsSlice[V any](value any) ([]V, error) {
 	if v, ok := value.([]V); ok {
 		return v, nil
 	}
-
 	rv := elemOf(reflect.ValueOf(value))
 	if !rv.IsValid() {
 		return nil, nil
@@ -29,12 +28,10 @@ func AsSlice[V any](value any) ([]V, error) {
 	if reflect.TypeOf(value).Kind() != reflect.Slice {
 		return nil, fmt.Errorf("failed to cast %T to %T", value, []V(nil))
 	}
-
 	convert, err := Converter[V]()
 	if err != nil {
 		return nil, err
 	}
-
 	slice := reflect.ValueOf(value)
 	size := slice.Len()
 	result := make([]V, size)
@@ -46,7 +43,6 @@ func AsSlice[V any](value any) ([]V, error) {
 		}
 		result[i] = v
 	}
-
 	return result, nil
 }
 
@@ -66,23 +62,20 @@ func asSlice(sliceType reflect.Type) func(reflect.Value) (reflect.Value, error) 
 		if value.IsNil() {
 			return reflect.New(sliceType).Elem(), nil
 		}
-
 		sliceElementType := sliceType.Elem()
 		convert, err := converter(sliceElementType)
 		if err != nil {
 			return reflect.Value{}, err
 		}
-
 		size := value.Len()
 		result := reflect.MakeSlice(sliceType, size, value.Cap())
-		for i := 0; i < size; i++ {
+		for i := range size {
 			v, err := convert(value.Index(i))
 			if err != nil {
 				return reflect.Value{}, err
 			}
 			result.Index(i).Set(v)
 		}
-
 		return result, nil
 	}
 }

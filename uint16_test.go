@@ -8,6 +8,7 @@ func TestAsUint16(t *testing.T) {
 	str := "42"
 	var nilPtr *uint16
 	tests := []castTest[uint16]{
+		{nil, 0, ""},
 		{int(42), 42, ""},
 		{uint(42), 42, ""},
 		{int8(42), 42, ""},
@@ -25,8 +26,23 @@ func TestAsUint16(t *testing.T) {
 		{str, 42, ""},
 		{&str, 42, ""},
 		{nilPtr, 0, ""},
-		{nil, 0, ""},
-		{"invalid", 0, "strconv.ParseUint: parsing \"invalid\": invalid syntax"},
+		{customAny(nil), 0, ""},
+		{customInt(42), 42, ""},
+		{customUint(42), 42, ""},
+		{customInt8(42), 42, ""},
+		{customUint8(42), 42, ""},
+		{customInt16(42), 42, ""},
+		{customUint16(42), 42, ""},
+		{customInt32(42), 42, ""},
+		{customUint32(42), 42, ""},
+		{customInt64(42), 42, ""},
+		{customUint64(42), 42, ""},
+		{customFloat32(42.0), 42, ""},
+		{customFloat64(42.0), 42, ""},
+		{customBool(true), 1, ""},
+		{customBool(false), 0, ""},
+		{customString(str), 42, ""},
+		{"invalid", 0, "failed to cast string to uint16"},
 		{[]int{1, 2, 3}, 0, "failed to cast []int to uint16"},
 	}
 	runCastTests(t, "AsUint16", AsUint16, tests)

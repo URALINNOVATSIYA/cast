@@ -19,6 +19,8 @@ func TestAsTime(t *testing.T) {
 		{"2024-01-29T20:22:03.123-07:00", time.Date(2024, 1, 29, 20, 22, 3, 123000000, time.FixedZone("-07:00", -7*60*60)), ""},
 		{"2024-01-29T20:22:03.123Z", time.Date(2024, 1, 29, 20, 22, 3, 123000000, time.UTC), ""},
 		{"2025-05-04", time.Date(2025, 5, 4, 0, 0, 0, 0, time.UTC), ""},
+		{customString("2025-05-04"), time.Date(2025, 5, 4, 0, 0, 0, 0, time.UTC), ""},
+		{customTime(time.Date(2020, 5, 20, 13, 15, 47, 0, time.UTC)), time.Date(2020, 5, 20, 13, 15, 47, 0, time.UTC), ""},
 		{"5:4", time.Time{}, "failed to parse \"5:4\" to time"},
 	}
 	runCastTests(t, "AsTime", AsTime, tests)

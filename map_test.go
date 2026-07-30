@@ -62,4 +62,12 @@ func TestAsMap(t *testing.T) {
 		}
 		runCastTests(t, "AsMap[int, map[string]bool]", AsMap[int, map[string]bool], tests)
 	})
+
+	t.Run("with custom types", func(t *testing.T) {
+		tests := []castTest[map[byte]customMap]{
+			{nil, nil, ""},
+			{map[string]map[int]bool{"123": {1: true, 2: false}}, map[byte]customMap{123: {"1": true, "2": false}}, ""},
+		}
+		runCastTests(t, "AsMap[byte, customMap]", AsMap[byte, customMap], tests)
+	})
 }

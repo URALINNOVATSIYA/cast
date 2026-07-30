@@ -21,12 +21,10 @@ func AsStruct[S any](value any) (S, error) {
 	if v, ok := value.(S); ok {
 		return v, nil
 	}
-
 	rs := reflect.ValueOf(&result).Elem()
 	if rs.Kind() != reflect.Struct {
 		return result, fmt.Errorf("expected generic type must be struct, %T got", result)
 	}
-
 	rv := elemOf(reflect.ValueOf(value))
 	switch rv.Kind() {
 	case reflect.Map:
@@ -36,11 +34,22 @@ func AsStruct[S any](value any) (S, error) {
 		}
 		return r.Interface().(S), err
 	case reflect.Struct:
+		if rv.CanConvert(rs.Type()) {
+			return rv.Convert(rs.Type()).Interface().(S), nil
+		}
 		r, err := structAsStruct(rv, rs)
 		if err != nil {
 			return result, err
 		}
 		return r.Interface().(S), err
+	default:
+		if rs.CanConvert(typeTime) {
+			t, err := AsTime(rv.Interface())
+			if err != nil {
+				return result, err
+			}
+			return reflect.ValueOf(t).Convert(rs.Type()).Interface().(S), nil
+		}
 	}
 	return result, fmt.Errorf("failed to cast %T to %T", value, result)
 }
@@ -61,11 +70,22 @@ func asStruct(structType reflect.Type) func(reflect.Value) (reflect.Value, error
 			}
 			return r, err
 		case reflect.Struct:
+			if value.CanConvert(structType) {
+				return value.Convert(structType), nil
+			}
 			r, err := structAsStruct(value, s)
 			if err != nil {
 				return reflect.Value{}, err
 			}
 			return r, err
+		default:
+			if value.CanConvert(typeTime) {
+				t, err := AsTime(value.Interface())
+				if err != nil {
+					return reflect.Value{}, err
+				}
+				return reflect.ValueOf(t).Convert(structType), nil
+			}
 		}
 		return reflect.Value{}, fmt.Errorf("failed to cast %s to %s", valueType, structType)
 	}

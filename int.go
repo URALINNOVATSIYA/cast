@@ -48,10 +48,21 @@ func AsInt(value any) (int, error) {
 		}
 		return 0, nil
 	case string:
-		return strconv.Atoi(v)
+		if r, err := strconv.Atoi(v); err == nil {
+			return r, nil
+		}
 	default:
 		rv := reflect.ValueOf(v)
-		if rv.Kind() == reflect.Pointer || rv.Kind() == reflect.Interface {
+		switch rv.Kind() {
+		case reflect.Bool, reflect.String,
+			reflect.Int, reflect.Uint,
+			reflect.Int8, reflect.Uint8,
+			reflect.Int16, reflect.Uint16,
+			reflect.Int32, reflect.Uint32,
+			reflect.Int64, reflect.Uint64,
+			reflect.Float32, reflect.Float64:
+			return AsInt(rv.Convert(kind2types[rv.Kind()]).Interface())
+		case reflect.Pointer, reflect.Interface:
 			rv = rv.Elem()
 			if !rv.IsValid() {
 				return 0, nil

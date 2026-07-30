@@ -14,8 +14,12 @@ func TestAsUuid(t *testing.T) {
 	tests := []castTest[uuid.UUID]{
 		{nil, uuid.Nil, ""},
 		{strId, id, ""},
+		{&id, id, ""},
+		{customString(strId), id, ""},
 		{binaryId, id, ""},
 		{byteId, id, ""},
+		{customSlice(byteId), id, ""},
+		{customUuid(id), id, ""},
 		{"", uuid.Nil, "invalid UUID length: 0"},
 		{"c3a120f3-a594-4ec-b7f1-5e63f5bf834d", uuid.Nil, "invalid UUID length: 35"},
 		{123, uuid.Nil, "failed to cast int to UUID"},

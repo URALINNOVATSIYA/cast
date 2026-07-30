@@ -6,7 +6,7 @@ import (
 
 type person struct {
 	Name  string
-	Age   int
+	Age   customInt
 	Sex   bool
 	Data  any
 	Score [][]int
@@ -19,13 +19,13 @@ type human struct {
 	Sex   string
 	Data  any
 	Score [][]float32
-	Foo   bool
+	Foo   customBool
 	boo   uint
 }
 
 type personContact struct {
 	Phone string
-	Email string
+	Email customString
 	Url   string
 }
 
@@ -37,7 +37,7 @@ type complexPerson struct {
 
 type humanContact struct {
 	Phone uint
-	Email string
+	Email customString
 }
 
 type complexHuman struct {

@@ -20,7 +20,6 @@ func AsMap[K comparable, V any](value any) (map[K]V, error) {
 	if v, ok := value.(map[K]V); ok {
 		return v, nil
 	}
-
 	rv := elemOf(reflect.ValueOf(value))
 	if !rv.IsValid() {
 		return nil, nil
@@ -29,7 +28,6 @@ func AsMap[K comparable, V any](value any) (map[K]V, error) {
 	if reflect.TypeOf(value).Kind() != reflect.Map {
 		return nil, fmt.Errorf("failed to cast %T to %T", value, map[K]V(nil))
 	}
-
 	convertKey, err := Converter[K]()
 	if err != nil {
 		return nil, err
@@ -38,7 +36,6 @@ func AsMap[K comparable, V any](value any) (map[K]V, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	result := make(map[K]V)
 	mapValue := reflect.ValueOf(value)
 	for _, key := range mapValue.MapKeys() {
@@ -52,7 +49,6 @@ func AsMap[K comparable, V any](value any) (map[K]V, error) {
 		}
 		result[k] = v
 	}
-
 	return result, nil
 }
 
@@ -72,7 +68,6 @@ func asMap(mapType reflect.Type) func(reflect.Value) (reflect.Value, error) {
 		if value.IsNil() {
 			return reflect.New(mapType).Elem(), nil
 		}
-
 		mapKeyType := mapType.Key()
 		convertKey, err := converter(mapKeyType)
 		if err != nil {
@@ -83,7 +78,6 @@ func asMap(mapType reflect.Type) func(reflect.Value) (reflect.Value, error) {
 		if err != nil {
 			return reflect.Value{}, err
 		}
-
 		result := reflect.MakeMap(mapType)
 		for _, key := range value.MapKeys() {
 			k, err := convertKey(key)
